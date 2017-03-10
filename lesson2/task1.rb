@@ -14,8 +14,9 @@ months={"Январь" => 31,
         "Декабрь" => 31
 }
 
-months_30_days = months.select { |m,d| d == 30 }
+#months_30_days = months.select { |m,d| d == 30 }
 puts "Месяцы с количеством дней, равным 30:"
-months_30_days.each do |m,d|
-  puts m
-end
+#months_30_days.each do |m,d|
+#  puts m
+#end
+puts (months.select { |m,d| d == 30 }).keys
