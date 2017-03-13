@@ -7,15 +7,7 @@ class Station
   end
 
   def trains(type = nil)
-    if @trains.any?
-      if !type
-        @trains
-      else
-        @trains.select { |train| train.type == type }
-      end
-    else
-     nil 
-    end
+      type ? @trains.select { |train| train.type == type } : @trains
   end
 
   def take_train(train)

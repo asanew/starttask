@@ -16,7 +16,7 @@ class Train
     @speed > 0
   end
   
-  def accel(value)
+  def accelerate(value)
     @speed += value if value > 0
   end
 
@@ -25,11 +25,11 @@ class Train
   end
 
   def add_wagon
-    @wagons += 1 if self.move?
+    @wagons += 1 unless move?
   end
 
   def del_wagon
-    @wagons -= 1 if self.move? && @wagons > 0
+    @wagons -= 1 unless move? && @wagons > 0
   end
 
   def move(forward = true)
@@ -39,11 +39,11 @@ class Train
   end
 
   def forward
-    self.move if !self.last_station
+    self.move unless self.last_station
   end
 
-  def revert
-    self.move(false) if !self.first_station
+  def backward
+    self.move(false) unless self.first_station
   end
 
   def first_station?
@@ -52,16 +52,18 @@ class Train
 
   def last_station?
     @route_station == @route.stations.count - 1
+  end
   
   def current_station
     @route.stations[@route_station]
   end
 
   def next_station
-    @route.stations[@route_station + 1] if !self.last_station?
+    @route.stations[@route_station + 1]
   end
 
   def prev_station
-    @route.stations[@route_station - 1] if !self.first_station?
+    @route.stations[@route_station - 1] unless self.first_station?
   end
 end
+
