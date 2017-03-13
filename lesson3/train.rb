@@ -29,7 +29,7 @@ class Train
   end
 
   def del_wagon
-    @wagons -= 1 unless move? && @wagons > 0
+    @wagons -= 1 unless move? && @wagons <= 0
   end
 
   def move(forward = true)
@@ -39,11 +39,11 @@ class Train
   end
 
   def forward
-    self.move unless self.last_station
+    self.move unless last_station?
   end
 
   def backward
-    self.move(false) unless self.first_station
+    self.move(false) unless first_station?
   end
 
   def first_station?
@@ -63,7 +63,7 @@ class Train
   end
 
   def prev_station
-    @route.stations[@route_station - 1] unless self.first_station?
+    @route.stations[@route_station - 1] unless first_station?
   end
 end
 
