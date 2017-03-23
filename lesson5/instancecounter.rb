@@ -1,7 +1,7 @@
 # Счетчик экземпляров класса
 
 module InstanceCounter
-  def included(base)
+  def self.included(base)
     base.extend ClassMethods
     base.send :include, InstanceMethods
   end
@@ -13,7 +13,7 @@ module InstanceCounter
   end
 
   module InstanceMethods
-    
+    protected
     @@inst = 0
     
     def register_instance

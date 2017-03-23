@@ -8,6 +8,7 @@ class Train
   attr_accessor :route
 
   include Manufacter
+  # не указано куда подключать, поэтому для примера в Train
   include InstanceCounter
 
   def initialize(number)
