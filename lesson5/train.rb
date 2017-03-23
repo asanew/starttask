@@ -16,8 +16,16 @@ class Train
     @wagons = []
     @speed = 0
     @route_station = 0
-    @@trains << self
+    @@trains[number] = self
     register_instance
+  end
+  
+  def self.find(number)
+    @@trains[number]
+  end
+
+  def self.all
+    @@trains.values
   end
   
   def accelerate(value)
@@ -56,18 +64,9 @@ class Train
     @route.stations[@route_station - 1] unless first_station?
   end
 
-  def self.find(number)
-    @@trains.find { |train| train.number == number }
-  end
-
-  def self.all
-    @@trains
-  end
+  @@trains = {}
 
   protected
-
-  @@trains = [] 
-
   # Проверка по условию нужна только для метода добавления/удаления вагонов
   def move?
     @speed > 0

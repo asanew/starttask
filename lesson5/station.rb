@@ -8,6 +8,10 @@ class Station
     @trains = []
     @@stations << self
   end
+  
+  def self.all
+    @@stations
+  end
 
   def trains(type = nil)
       type ? @trains.select { |train| train.type == type } : @trains
@@ -21,11 +25,6 @@ class Station
     @trains.delete(train)
   end
 
-  def self.all
-    @@stations
-  end
-  
-  protected
   @@stations = []
 end
 

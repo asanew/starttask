@@ -8,16 +8,16 @@ module InstanceCounter
   
   module ClassMethods
     def instances
-      class_variable_get :@@inst
+      class_variable_get :@@instances
     end
   end
 
   module InstanceMethods
-    protected
-    @@inst = 0
+    @@instances = 0
     
+    protected
     def register_instance
-      @@inst += 1
+      @@instances += 1
     end
   end
 end
