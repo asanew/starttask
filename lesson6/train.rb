@@ -81,7 +81,7 @@ class Train
   protected
   
   def validate!
-    raise "Номер поезда задан в некорректном формате" unless @number =~ /^[\d\wа-я]{3}[-]{0,1}[\d\wа-я]{2}$/
+    raise "Номер поезда задан в некорректном формате" unless @number =~ /^[\d\wа-я]{3}[-]{0,1}[\d\wа-я]{2}$/i
     raise "Маршрут должен быть объектом класса Route" if @route && @route.class != Route
     true
   end
