@@ -42,6 +42,14 @@ class Train
       @wagons.each
     end
   end
+
+  def each_with_number(&block)
+    if block_given?
+      @wagons.each_with_index { |wagon,index| block.call(wagon,index+1) }
+    else
+      @wagons.each
+    end
+  end
   
   def route=(route)
     raise "Назначаемый маршрут должен быть объектом класса Route" unless route.class == Route

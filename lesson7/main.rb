@@ -70,7 +70,7 @@ class Program
       else
         type = nil
       end
-      puts station.trains(type)
+      station.each { |train| puts "#{train.type == :passenger ? 'Пассажирский' : 'Товарный'} поезд № #{train.number} с количеством вагонов: #{train.wagons.length}" if !type || type == train.type }
     else
       puts 'Такая станция не найдена'
     end
@@ -139,6 +139,53 @@ class Program
     end
   end
 
+  def list_wagons(train)
+    train.each_with_number do |wagon,number|
+      print "Вагон № #{number} "
+      if wagon.type == :passenger
+        puts "пассажирский имеет #{wagon.free_seats} свободных и #{wagon.busy_seats} занятых мест"
+      else
+        puts "грузовой имеет #{wagon.free_volume} свободного и #{wagon.busy_volume} занятого объема"
+      end
+    end
+  end
+
+  def fill_wagons(train)
+    loop do
+      puts 'Введите номер вагона или exit для выхода:'
+      number = gets.chomp
+      break if number == 'exit'
+      number = number.to_i - 1
+      if number >= 0
+        if train.wagons[number].type == :passenger
+          puts 'Занимаем одно место в вагоне'
+          train.wagons[number].take_seat
+        else
+          print 'Введите занимаемый объём: '
+          volume = gets.chomp
+          train.wagons[number].fill(volume)
+        end
+      end
+    end
+  end
+
+  def manage_wagons(train)
+    loop do
+      puts 'Выберите действие или exit для выхода:'
+      puts 'список | заполнить'
+      action = gets.chomp
+      break if action == 'exit'
+      case
+      when 'список'
+        list_wagons(train)
+      when 'заполнить'
+        fill_wagons(train)
+      else
+        error_message
+      end
+    end
+  end
+
   def train_route(train)
     loop do
       puts 'Выберите станцию для просмотра или exit для выхода:'
@@ -165,7 +212,7 @@ class Program
     if train
       loop do
         puts 'Введите действие или exit для выхода:'
-        puts '+вагон | -вагон | маршрут | вперед | назад'
+        puts '+вагон | -вагон | вагоны | маршрут | вперед | назад'
         user_input = gets.chomp.downcase
         break if user_input == 'exit'
         case user_input
@@ -173,6 +220,8 @@ class Program
           add_wagon(train)
         when '-вагон'
           del_wagon(train)
+        when 'вагоны'
+          manage_wagons(train)
         when 'маршрут'
           train_route(train)
         when 'вперед'
