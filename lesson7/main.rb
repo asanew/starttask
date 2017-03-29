@@ -128,7 +128,7 @@ class Program
       puts 'Введите объем вагона'
       volume = gets.chomp
       train.add_wagon(CargoWagon.new(volume))
-    else
+    end
   end
 
   def del_wagon(train)
