@@ -13,9 +13,9 @@ class Station
     @@stations
   end
 
-  def each(&block)
+  def each_train(&block)
     if block_given?
-      @trains.each { |train| block.call(train) }
+      @trains.each { |train| yield train }
     else
       @trains.each
     end

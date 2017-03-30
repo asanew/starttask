@@ -14,10 +14,8 @@ class PassengerWagon < Wagon
   end
   
   def take_seat
+    raise 'Количество занятых мест не может быть больше общего' if @busy_seats == @seats
     @busy_seats += 1
-    validate!
-  rescue
-    @busy_seats = @seats
   end
 
   def free_seats
@@ -28,7 +26,6 @@ class PassengerWagon < Wagon
   
   def validate!
     raise "Количество место должно быть больше нуля" unless @seats > 0
-    raise "Количество занятых мест не может быть больще общего" if @busy_seats > @seats
     true
   end
 end

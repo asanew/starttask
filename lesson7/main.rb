@@ -70,7 +70,7 @@ class Program
       else
         type = nil
       end
-      station.each { |train| puts "#{train.type == :passenger ? 'Пассажирский' : 'Товарный'} поезд № #{train.number} с количеством вагонов: #{train.wagons.length}" if !type || type == train.type }
+      station.each_train { |train| puts "#{train.type == :passenger ? 'Пассажирский' : 'Товарный'} поезд № #{train.number} с количеством вагонов: #{train.wagons.length}" if !type || type == train.type }
     else
       puts 'Такая станция не найдена'
     end
@@ -140,7 +140,7 @@ class Program
   end
 
   def list_wagons(train)
-    train.each_with_number do |wagon,number|
+    train.each_wagon_with_number do |wagon,number|
       print "Вагон № #{number} "
       if wagon.type == :passenger
         puts "пассажирский имеет #{wagon.free_seats} свободных и #{wagon.busy_seats} занятых мест"

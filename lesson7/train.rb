@@ -35,17 +35,17 @@ class Train
     false
   end
   
-  def each(&block)
+  def each_wagon(&block)
     if block_given?
-      @wagons.each { |wagon| block.call(wagon) }
+      @wagons.each { |wagon| yield wagon }
     else
       @wagons.each
     end
   end
 
-  def each_with_number(&block)
+  def each_wagon_with_number(&block)
     if block_given?
-      @wagons.each_with_index { |wagon,index| block.call(wagon,index+1) }
+      @wagons.each_with_index(1) { |wagon,index| yield wagon,index }
     else
       @wagons.each
     end
