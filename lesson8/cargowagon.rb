@@ -14,8 +14,9 @@ class CargoWagon < Wagon
 
   def fill(volume)
     volume = volume.to_f
-    raise 'Занятый объем не может превышать общий' if
-      @busy_volume + volume > @volume
+    if @busy_volume + volume > @volume
+      raise 'Занятый объем не может превышать общий'
+    end
     @busy_volume += volume
   end
 

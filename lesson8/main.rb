@@ -100,7 +100,7 @@ class Program
     loop do
       puts 'Введите тип поезда: пассажирский или товарный'
       type = gets.chomp
-      break if type == 'пассажирский' || type == 'товарный'
+      break if %w(пассажирский товарный).include? type
       error_message
     end
     type == 'пассажирский' ? PassengerTrain.new(number) : CargoTrain.new(number)
@@ -326,8 +326,7 @@ class Program
     if number >= 0 && number < @routes.length
       route = @routes[number]
       puts 'Введите номер поезда'
-      train = gets.chomp
-      train = Train.find(train)
+      train = Train.find(gets.chomp)
       if train
         train.route = route
       else
