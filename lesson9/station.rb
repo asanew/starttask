@@ -1,7 +1,10 @@
 # Станция
+require_relative 'accessors'
 
 class Station
-  attr_reader :name
+  include Accessors
+
+  attr_accessor_with_history :name
 
   def initialize(name)
     @name = name

@@ -32,12 +32,12 @@ module Validation
           var_value = instance_variable_get name
           if var_value
             if var_value.class == String && var_value.strip == ''
-              raise "Значение переменной должно быть НЕ пустой строкой"
+              raise "Значение переменной #{field_name} должно быть НЕ пустой строкой"
             else
               true
             end
           else
-            raise "Значение переменной должно быть заполнено"
+            raise "Значение переменной #{field_name} должно быть заполнено"
           end
         end
       when :format
@@ -47,7 +47,7 @@ module Validation
         end
         define_method(method_name) do 
           unless regex.match(instance_variable_get name) 
-            raise "Значение переменной не соответствует формату"
+            raise "Значение переменной #{field_name} не соответствует формату"
           else
             true
           end
@@ -57,7 +57,7 @@ module Validation
         define_method(method_name) do
           var_value = instance_variable_get name
           if var_value.class != check_type
-            raise "Значение переменной не соответствует указанному типу"
+            raise "Значение переменной #{field_name} не соответствует указанному типу"
           else
             true
           end

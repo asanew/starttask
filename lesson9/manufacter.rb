@@ -1,5 +1,7 @@
 # Производитель
+require_relative 'accessors'
 
 module Manufacter
-  attr_accessor :manufacter_name
+  include Accessors
+  strong_attr_accessor :manufacter_name, String
 end

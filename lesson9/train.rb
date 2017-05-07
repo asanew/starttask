@@ -3,13 +3,17 @@
 require_relative 'manufacter'
 require_relative 'instancecounter'
 require_relative 'route'
+require_relative 'validation'
 
 class Train
+  include Validation
+  include Manufacter
+  include InstanceCounter
+  
   attr_reader :number, :type, :wagons, :speed, :route
 
-  include Manufacter
-  # не указано куда подключать, поэтому для примера в Train
-  include InstanceCounter
+  validate :number, :format, /^[\d\wа-я]{3}[-]{0,1}[\d\wа-я]{2}$/i
+  validate :route, :type, Route
 
   def initialize(number, options = {})
     @number = number
@@ -28,12 +32,6 @@ class Train
 
   def self.all
     @@trains.values
-  end
-
-  def valid?
-    validate!
-  rescue
-    false
   end
 
   def each_wagon
@@ -97,14 +95,6 @@ class Train
   @@trains ||= {}
 
   protected
-
-  def validate!
-    raise 'Номер поезда задан в некорректном формате' unless
-      @number =~ /^[\d\wа-я]{3}[-]{0,1}[\d\wа-я]{2}$/i
-    raise 'Маршрут должен быть объектом класса Route' if
-      @route && @route.class != Route
-    true
-  end
 
   # Проверка по условию нужна только для метода добавления/удаления вагонов
   def move?
