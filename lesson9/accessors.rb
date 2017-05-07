@@ -34,7 +34,7 @@ module Accessors
       define_method(name.to_sym) { instance_variable_get(var_name_sym) }
       
       define_method("#{name}=".to_sym) do |value|
-        unless value.class == Object.const_get(var_type.to_s)
+        unless value.is_a? var_type
          raise TypeError, "Присваиваемое значение должно быть #{var_type} типа"
         end
         instance_variable_set(var_name_sym, value)
