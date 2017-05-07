@@ -17,5 +17,5 @@ puts "Values history:"
 puts test_obj.h_test_history
 puts
 puts test_obj.strong_test = 15
-puts test_obj.strong_test = "ewrwr"
+#puts test_obj.strong_test = "ewrwr"
 
