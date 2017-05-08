@@ -15,34 +15,44 @@ module Validation
     def validate!
       self.class.instance_variable_get(:@validations).each do |validation|
         var_name = validation[:name]
-        self.class.do_validation(var_name, instance_variable_get("#{var_name}".to_sym),
-                                 validation[:type],validation[:param])
+        method_name = "validate_#{validation[:type].to_s}".to_sym
+        if validation[:type] == :presence
+          send method_name, var_name
+        else
+          send method_name, var_name, validation[:param]
+        end
+      end
+    end
+
+    protected
+
+    def validate_presence(name)
+      value = instance_variable_get("#{name}".to_sym)
+      if value
+        if (value.is_a? String) && value.strip == ''
+          raise "Значение переменной #{name} должно быть НЕ пустой строкой"
+        end
+      else
+        raise "Значение переменной #{name} должно быть заполнено"
+      end
+    end
+
+    def validate_type(name, type)
+      value = instance_variable_get("#{name}".to_sym)
+      unless value.is_a? type
+        raise "Значение переменной #{name} не соответствует указанному типу #{type.to_s}"
+      end
+    end
+
+    def validate_format(name, format)
+      value = instance_variable_get("#{name}".to_sym)
+      unless format.match(value)
+        raise "Значение переменной #{name} не соответствует формату #{format.to_s}"
       end
     end
   end
 
   module ClassMethods
-    def do_validation(name, value, type, param)
-      case type
-      when :presence
-        if value
-          if (value.is_a? String) && value.strip == ''
-            raise "Значение переменной #{name} должно быть НЕ пустой строкой"
-          end
-        else
-          raise "Значение переменной #{name} должно быть заполнено"
-        end
-      when :format
-        unless param.match(value)
-          raise "Значение переменной #{name} не соответствует формату #{param.to_s}"
-        end
-      when :type
-        unless value.is_a? param
-          raise "Значение переменной #{name} не соответствует указанному типу #{param.to_s}"
-        end
-      end
-    end
-
     def validate(field_name, *args)
       name = "@#{field_name.to_s}"
       unless instance_variable_defined? (:@validations)
