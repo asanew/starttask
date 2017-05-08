@@ -13,58 +13,53 @@ module Validation
     end
 
     def validate!
-      methods.each do |method|
-        if method.to_s =~ /^validate_.*/
-          send method
-        end
+      self.class.instance_variable_get(:@validations).each do |validation|
+        var_name = validation[:name]
+        self.class.do_validation(var_name, instance_variable_get("#{var_name}".to_sym),
+                                 validation[:type],validation[:param])
       end
     end
   end
 
   module ClassMethods
-    def validate(field_name, *args)
-      name = "@#{field_name.to_s}".to_sym
-      type = args[0]
-      method_name = "validate_#{field_name.to_s}_#{type.to_s}".to_sym
+    def do_validation(name, value, type, param)
       case type
       when :presence
-        define_method(method_name) do
-          var_value = instance_variable_get name
-          if var_value
-            if var_value.class == String && var_value.strip == ''
-              raise "Значение переменной #{field_name} должно быть НЕ пустой строкой"
-            else
-              true
-            end
-          else
-            raise "Значение переменной #{field_name} должно быть заполнено"
+        if value
+          if (value.is_a? String) && value.strip == ''
+            raise "Значение переменной #{name} должно быть НЕ пустой строкой"
           end
+        else
+          raise "Значение переменной #{name} должно быть заполнено"
         end
       when :format
-        regex = args[1]
-        if regex.class != Regexp
-          raise "Для проверки формата должно передаваться регулярное выражение"
-        end
-        define_method(method_name) do 
-          unless regex.match(instance_variable_get name) 
-            raise "Значение переменной #{field_name} не соответствует формату"
-          else
-            true
-          end
+        unless param.match(value)
+          raise "Значение переменной #{name} не соответствует формату #{param.to_s}"
         end
       when :type
-        check_type = args[1]
-        define_method(method_name) do
-          var_value = instance_variable_get name
-          if var_value.class != check_type
-            raise "Значение переменной #{field_name} не соответствует указанному типу"
-          else
-            true
-          end
+        unless value.is_a? param
+          raise "Значение переменной #{name} не соответствует указанному типу #{param.to_s}"
         end
-      else
+      end
+    end
+
+    def validate(field_name, *args)
+      name = "@#{field_name.to_s}"
+      unless instance_variable_defined? (:@validations)
+        @validations = []
+      end
+      type = args[0]
+      param = args[1]
+      if type != :presence && type != :format && type != :type
         raise "Неизвестный тип валидации"
       end
+      if type == :format && !(param.is_a? Regexp)
+        raise "Для проверки формата должно передаваться регулярное выражение"
+      end
+      if type == :type && !(param.is_a? Class)
+        raise "Для проверки на тип данных должен указываться класс"
+      end
+      @validations << { name: name, type: type, param: param }
     end
   end
 end
